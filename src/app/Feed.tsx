@@ -59,32 +59,21 @@ export default function Feed() {
 
   // Show KYC modal 3 seconds after first load from onboarding (only once per session)
   useEffect(() => {
-    // Check if KYC has already been completed or dismissed this session
-    const kycCompleted = localStorage.getItem('lethe_kyc_completed');
-    const kycShownThisSession = sessionStorage.getItem('lethe_kyc_shown');
+    // TEMPORARY: Always show KYC for testing purposes
+    // TODO: Re-enable storage checks for production
+    // const kycCompleted = localStorage.getItem('lethe_kyc_completed');
+    // const kycShownThisSession = sessionStorage.getItem('lethe_kyc_shown');
     
-    console.log('🔍 KYC Check:', { 
-      kycCompleted: !!kycCompleted, 
-      kycShownThisSession: !!kycShownThisSession,
-      willShow: !kycCompleted && !kycShownThisSession
-    });
+    console.log('🔍 KYC Check: Always showing for testing');
     
-    // Only show KYC if:
-    // 1. User hasn't completed KYC yet (localStorage check - persists across sessions)
-    // 2. KYC hasn't been shown in this session (sessionStorage check - prevents showing after "Later")
-    if (!kycCompleted && !kycShownThisSession) {
-      console.log('✅ KYC will show in 3 seconds...');
-      const timer = setTimeout(() => {
-        setIsKYCModalOpen(true);
-        sessionStorage.setItem('lethe_kyc_shown', 'true');
-      }, 3000);
+    // Always show KYC modal after 3 seconds
+    console.log('✅ KYC will show in 3 seconds...');
+    const timer = setTimeout(() => {
+      setIsKYCModalOpen(true);
+      // sessionStorage.setItem('lethe_kyc_shown', 'true');
+    }, 3000);
 
-      return () => clearTimeout(timer);
-    } else {
-      console.log('❌ KYC not showing because:', 
-        kycCompleted ? 'already completed (localStorage)' : 'already shown this session (sessionStorage)'
-      );
-    }
+    return () => clearTimeout(timer);
   }, []);
 
   // Handle KYC modal close
