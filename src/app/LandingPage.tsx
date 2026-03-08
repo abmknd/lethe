@@ -1141,7 +1141,7 @@ export default function LandingPage() {
             </div>
             <video className="lethe-demo-video" ref={videoRef} controls>
               <source
-                src="https://www.w3.org/WAI/perspectives/captions.mp4"
+                src="https://github.com/user-attachments/assets/2671d9df-961e-445e-9c31-8b6f566c1f15"
                 type="video/mp4"
               />
             </video>

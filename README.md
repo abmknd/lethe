@@ -1,7 +1,7 @@
 
-  # Lethe Social
+  # Lethe
 
-  This is a code bundle for Lethe Social. The original project is available at https://www.figma.com/design/Mipf1Fg39XRVuSI2PdypZr/Lethe-Social.
+  This is a code bundle for Lethe. The original project is available at https://www.figma.com/design/Mipf1Fg39XRVuSI2PdypZr/Lethe.
 
   ## Running the code
 

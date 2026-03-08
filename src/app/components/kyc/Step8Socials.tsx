@@ -1,14 +1,14 @@
 import { Globe, Github } from 'lucide-react';
 import { KYCData } from '../KYCModal';
 
-interface Step7Props {
+interface Step8Props {
   isActive: boolean;
   direction: 'forward' | 'back';
   data: KYCData;
   updateData: (updates: Partial<KYCData>) => void;
 }
 
-export function Step7Socials({ isActive, direction, data, updateData }: Step7Props) {
+export function Step8Socials({ isActive, direction, data, updateData }: Step8Props) {
   const getClassName = () => {
     if (isActive) return 'kyc-step-active';
     if (direction === 'forward') return 'kyc-step-exit-left';

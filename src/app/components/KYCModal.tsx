@@ -6,8 +6,10 @@ import { Step3Objectives } from './kyc/Step3Objectives';
 import { Step4MeetKind } from './kyc/Step4MeetKind';
 import { Step5Hobbies } from './kyc/Step5Hobbies';
 import { Step6Intro } from './kyc/Step6Intro';
-import { Step7Socials } from './kyc/Step7Socials';
-import { Step8Verify } from './kyc/Step8Verify';
+import { Step7ProfileImage } from './kyc/Step7ProfileImage';
+import { Step8Socials } from './kyc/Step8Socials';
+import { Step9FinishRegistration } from './kyc/Step9FinishRegistration';
+import { Step10Verify } from './kyc/Step10Verify';
 import { KYCDone } from './kyc/KYCDone';
 import { KYCPaused } from './kyc/KYCPaused';
 
@@ -33,6 +35,7 @@ export interface KYCData {
     github: string;
   };
   verificationCode: string;
+  profileImage: string;
 }
 
 export function KYCModal({ isOpen, onClose, onComplete }: KYCModalProps) {
@@ -40,7 +43,7 @@ export function KYCModal({ isOpen, onClose, onComplete }: KYCModalProps) {
   const [direction, setDirection] = useState<'forward' | 'back'>('forward');
   const [isComplete, setIsComplete] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
-  const TOTAL_STEPS = 8;
+  const TOTAL_STEPS = 10;
 
   const [data, setData] = useState<KYCData>({
     city: null,
@@ -58,6 +61,7 @@ export function KYCModal({ isOpen, onClose, onComplete }: KYCModalProps) {
       github: '',
     },
     verificationCode: '',
+    profileImage: '',
   });
 
   const updateData = (updates: Partial<KYCData>) => {
@@ -69,7 +73,7 @@ export function KYCModal({ isOpen, onClose, onComplete }: KYCModalProps) {
     if (currentStep === 3) return data.objectives.size > 0;
     if (currentStep === 4) return (data.meetWho.size + data.meetWhere.size) > 0;
     if (currentStep === 6) return data.intro.length >= 60;
-    if (currentStep === 8) return false; // Wait for verification
+    if (currentStep === 10) return false; // Wait for verification
     return true;
   };
 
@@ -188,14 +192,27 @@ export function KYCModal({ isOpen, onClose, onComplete }: KYCModalProps) {
                 data={data}
                 updateData={updateData}
               />
-              <Step7Socials 
+              <Step7ProfileImage 
                 isActive={currentStep === 7} 
                 direction={direction}
                 data={data}
                 updateData={updateData}
               />
-              <Step8Verify 
+              <Step8Socials 
                 isActive={currentStep === 8} 
+                direction={direction}
+                data={data}
+                updateData={updateData}
+              />
+              <Step9FinishRegistration 
+                isActive={currentStep === 9} 
+                direction={direction}
+                data={data}
+                updateData={updateData}
+                onContinueToVerify={goNext}
+              />
+              <Step10Verify 
+                isActive={currentStep === 10} 
                 direction={direction}
                 data={data}
                 updateData={updateData}
@@ -208,7 +225,7 @@ export function KYCModal({ isOpen, onClose, onComplete }: KYCModalProps) {
         </div>
 
         {/* CTA bar */}
-        {!isComplete && !isPaused && currentStep !== 8 && (
+        {!isComplete && !isPaused && currentStep !== 9 && currentStep !== 10 && (
           <div className="absolute bottom-0 left-0 right-0 px-8 pt-3 pb-5 bg-gradient-to-t from-[#0c0f0c] via-[rgba(9,12,9,0.95)] to-transparent z-10">
             <div className="flex items-center gap-3">
               <button

@@ -59,7 +59,7 @@ export function Step3Objectives({ isActive, direction, data, updateData }: Step3
             <button
               key={index}
               onClick={() => toggleObjective(index)}
-              className={`relative px-4 py-[18px] rounded-[14px] border transition-all flex flex-col gap-2 ${
+              className={`relative px-4 py-[18px] rounded-[14px] border transition-all flex flex-col items-start gap-2 ${
                 isSelected
                   ? 'bg-[#7FFF00]/[0.12] border-[#7FFF00]/30'
                   : isDimmed

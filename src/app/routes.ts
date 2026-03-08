@@ -4,6 +4,7 @@ import OnboardingFlow from "./OnboardingFlow";
 import Feed from "./Feed";
 import LandingPage from "./LandingPage";
 import ProfilePage from "./ProfilePage";
+import OtherUserProfilePage from "./OtherUserProfilePage";
 import MessagesPage from "./MessagesPage";
 import MatchesPage from "./MatchesPage";
 import SettingsPage from "./SettingsPage";
@@ -33,6 +34,10 @@ export const router = createBrowserRouter([
       { 
         path: "profile", 
         Component: ProfilePage 
+      },
+      { 
+        path: "user/:username", 
+        Component: OtherUserProfilePage 
       },
       { 
         path: "messages", 

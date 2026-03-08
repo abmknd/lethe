@@ -5,6 +5,7 @@ import { Tooltip } from "./Tooltip";
 import ArcticonsTetherfi from "../../imports/ArcticonsTetherfi";
 import { PostOptionsMenu } from "./PostOptionsMenu";
 import { useState, useRef } from "react";
+import { useNavigate } from "react-router";
 
 interface PostCardProps {
   avatar: string;
@@ -126,6 +127,8 @@ export function PostCard({
     }
   };
 
+  const navigate = useNavigate();
+
   return (
     <article 
       className={`relative ${bg} rounded-2xl border ${border} shadow-2xl ${shadowColor} overflow-hidden group transition-colors duration-300 ${isFossil && onFadedClick ? 'cursor-pointer' : ''}`} 
@@ -152,11 +155,17 @@ export function PostCard({
         {/* Header with Avatar, Username, and Top-Right Actions */}
         <div className="flex gap-3 mb-4">
           {/* Avatar */}
-          <div className="flex-shrink-0">
+          <div 
+            className="flex-shrink-0 cursor-pointer"
+            onClick={(e) => {
+              e.stopPropagation();
+              navigate(`/user/${username}`);
+            }}
+          >
             <ImageWithFallback
               src={avatar}
               alt={username}
-              className="w-10 h-10 rounded-full object-cover bg-[#1a1a1a] ring-1 ring-[#2a2a2a]"
+              className="w-10 h-10 rounded-full object-cover bg-[#1a1a1a] ring-1 ring-[#2a2a2a] hover:ring-[#7FFF00]/40 transition-all"
             />
           </div>
 
@@ -164,7 +173,13 @@ export function PostCard({
           <div className="flex-1 min-w-0 flex flex-col justify-between">
             <div className="flex flex-col gap-0.5">
               <div className="flex items-baseline gap-2.5">
-                <span className="text-white text-[15px] font-light font-sans tracking-wide">
+                <span 
+                  className="text-white text-[15px] font-light font-sans tracking-wide cursor-pointer hover:text-[#7FFF00] transition-colors"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    navigate(`/user/${username}`);
+                  }}
+                >
                   {username}
                 </span>
                 <span className="text-[#6B6B6B] text-[13px] tracking-wider font-light font-sans">

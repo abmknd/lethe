@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Check, Zap } from 'lucide-react';
+import { useNavigate } from 'react-router';
 import svgPaths from "../../imports/svg-mzo5g4s9h6";
 import GenderIcon from "../../imports/Gender";
 import Female from "../../imports/Female";
@@ -178,6 +179,7 @@ export function ConnectContent({ activeTab }: ConnectContentProps) {
   const [isAnimating, setIsAnimating] = useState(false);
   const [showMatchFlash, setShowMatchFlash] = useState(false);
   const [profileFade, setProfileFade] = useState(false);
+  const navigate = useNavigate();
 
   const currentSuggestion = suggestions[currentIdx];
   const totalSuggestions = suggestions.length;
@@ -247,11 +249,19 @@ export function ConnectContent({ activeTab }: ConnectContentProps) {
               <div className={`flex-1 min-h-0 overflow-y-auto transition-opacity duration-[220ms] ${profileFade ? 'opacity-0' : 'opacity-100'}`}>
                 {/* Hero */}
                 <div className="flex items-start gap-4 p-5 flex-shrink-0 border-b border-white/[0.07] relative">
-                  <div className="w-[70px] h-[70px] rounded-full flex-shrink-0 overflow-hidden bg-[#0d150d]">
+                  <div 
+                    className="w-[70px] h-[70px] rounded-full flex-shrink-0 overflow-hidden bg-[#0d150d] cursor-pointer hover:ring-2 hover:ring-[#7FFF00]/40 transition-all"
+                    onClick={() => navigate(`/user/${currentSuggestion.handle.replace('@', '')}`)}
+                  >
                     <img src={currentSuggestion.img} alt={currentSuggestion.name} className="w-full h-full object-cover object-[center_20%]" />
                   </div>
                   <div className="flex flex-col justify-center gap-[4px]">
-                    <div className="font-['Libre_Baskerville'] text-[22px] leading-[1.2] text-white/[0.88]">{currentSuggestion.name}</div>
+                    <div 
+                      className="font-['Libre_Baskerville'] text-[22px] leading-[1.2] text-white/[0.88] cursor-pointer hover:text-[#7FFF00] transition-colors"
+                      onClick={() => navigate(`/user/${currentSuggestion.handle.replace('@', '')}`)}
+                    >
+                      {currentSuggestion.name}
+                    </div>
                     <div className="text-[13px] text-white/[0.25] tracking-[0.04em]">{currentSuggestion.handle}</div>
                     
                     <div className="flex flex-col gap-[4px] mt-[8px]">

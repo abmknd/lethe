@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { KYCData } from '../KYCModal';
 
-interface Step8Props {
+interface Step10Props {
   isActive: boolean;
   direction: 'forward' | 'back';
   data: KYCData;
@@ -9,7 +9,7 @@ interface Step8Props {
   onComplete: () => void;
 }
 
-export function Step8Verify({ isActive, direction, data, updateData, onComplete }: Step8Props) {
+export function Step10Verify({ isActive, direction, data, updateData, onComplete }: Step10Props) {
   const [code, setCode] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
 
