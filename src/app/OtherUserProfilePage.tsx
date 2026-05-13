@@ -1,6 +1,21 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router';
 import { MessageCircle, UserPlus } from 'lucide-react';
+
+interface PublicProfile {
+  id: string;
+  name: string;
+  handle: string | null;
+  location: string | null;
+  bio: string;
+  introText: string;
+  interests: string[];
+  objectives: string[];
+}
+
+const API_BASE =
+  (import.meta.env.VITE_TRIAL_API_BASE_URL as string | undefined) ??
+  'http://localhost:8787';
 import svgPaths from "../imports/svg-mzo5g4s9h6";
 import svgPathsBack from "../imports/svg-9x8xqlgryp";
 import svgPathsRing from "../imports/svg-gaju7ne3wq";
@@ -194,16 +209,73 @@ export default function OtherUserProfilePage() {
   const { username } = useParams<{ username: string }>();
   const [activeTab, setActiveTab] = useState<'all' | 'faded' | 'echoes'>('all');
   const [isFollowing, setIsFollowing] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [notFound, setNotFound] = useState(false);
+  const [apiProfile, setApiProfile] = useState<PublicProfile | null>(null);
 
-  // Get user data from mock (in production, fetch from API)
-  const user = username ? mockUsers[username] : null;
+  const mockUser = username ? mockUsers[username] : null;
 
-  // Initialize following state from user data
-  if (user && isFollowing !== user.isFollowing) {
-    setIsFollowing(user.isFollowing);
+  // Init following state from mock data (safe — inside useEffect, not during render)
+  useEffect(() => {
+    if (mockUser) setIsFollowing(mockUser.isFollowing);
+  }, [username]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // For usernames not in mock, fetch from the public profile API.
+  // On 404 or any network error, set notFound — silent fail.
+  useEffect(() => {
+    if (!username || mockUser) return;
+
+    let cancelled = false;
+    setLoading(true);
+    setNotFound(false);
+    setApiProfile(null);
+
+    fetch(`${API_BASE}/api/trial/users/${encodeURIComponent(username)}/profile/public`)
+      .then(async (res) => {
+        if (!res.ok) throw new Error(`${res.status}`);
+        const body = await res.json() as { profile: PublicProfile };
+        return body.profile;
+      })
+      .then((profile) => {
+        if (!cancelled) setApiProfile(profile);
+      })
+      .catch(() => {
+        if (!cancelled) setNotFound(true);
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false);
+      });
+
+    return () => { cancelled = true; };
+  }, [username]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Compose the display user from mock or API data
+  const user = mockUser ?? (apiProfile ? {
+    username: apiProfile.handle?.replace(/^@/, '') ?? username,
+    name: apiProfile.name,
+    handle: apiProfile.handle ?? `@${username}`,
+    pronouns: null,
+    occupation: null,
+    location: apiProfile.location,
+    avatar: null,
+    bio: apiProfile.introText || apiProfile.bio,
+    isMatch: false,
+    isFollowing: false,
+    stats: { followers: 0, following: 0, posts: 0, faded: 0 },
+    matches: { count: 0, avatars: [] },
+    meetings: 0,
+    posts: [],
+  } : null);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-black flex items-center justify-center">
+        <div className="w-6 h-6 border-2 border-white/10 border-t-[#7FFF00] rounded-full animate-spin" />
+      </div>
+    );
   }
 
-  if (!user) {
+  if (notFound || (!user && !loading)) {
     return (
       <div className="min-h-screen bg-black flex items-center justify-center">
         <div className="text-center">
@@ -220,6 +292,8 @@ export default function OtherUserProfilePage() {
       </div>
     );
   }
+
+  if (!user) return null;
 
   const handleMessage = () => {
     navigate('/messages', { state: { username: user.username } });
